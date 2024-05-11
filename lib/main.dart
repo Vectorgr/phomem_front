@@ -69,7 +69,6 @@ class _MemoriesListViewState extends State<MemoriesListView> {
     final screenWidth = MediaQuery.of(context).size.width;
     final columnsCount = (screenWidth / memoryWidth)
         .floor(); // Ancho de cada elemento (ejemplo: 200)
-    log(MediaQuery.of(context).size.width.toString() + "");
     return SafeArea(
         child: SingleChildScrollView(
       child: FutureBuilder(
@@ -87,8 +86,8 @@ class _MemoriesListViewState extends State<MemoriesListView> {
             if (columnsCount > 1) {
               return GridViewMemory(
                   columnsCount: columnsCount, snapshot: snapshot);
-            }else{
-              return  ListViewMemory(snapshot: snapshot);
+            } else {
+              return ListViewMemory(snapshot: snapshot);
             }
           } else {
             return Center(
@@ -110,43 +109,40 @@ class ListViewMemory extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    
     return ListView.builder(
-          shrinkWrap: true,
-          itemCount: snapshot.data!.length,
-          itemBuilder: (context, index) {
-            final mem = snapshot.data![index];
-            return Center(
+        shrinkWrap: true,
+        itemCount: snapshot.data!.length,
+        itemBuilder: (context, index) {
+          final mem = snapshot.data![index];
+          return Center(
               child: Padding(
-              padding: EdgeInsets.only(top: 10.0),
-    
-              //// Wrap the ListTile with Card Widget...
-              child: TransparentImageCard(
-                width: 300,
-                height: 300,
-                imageProvider: NetworkImage(
-                    'https://img.freepik.com/foto-gratis/flor-purpura-margarita-osteospermum_1373-16.jpg?size=626&ext=jpg&ga=GA1.1.672697106.1714089600&semt=ais'),
-                title: Text(
-                  mem.title,
-                  style: TextStyle(
-                      fontSize: 22.0,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.white,
-                      decoration: TextDecoration.none),
-                ),
-                description: Text(
-                  formatDescription(mem.description),
-                  style: TextStyle(
-                      fontSize: 18.0,
-                      fontWeight: FontWeight.normal,
-                      color: Colors.white,
-                      decoration: TextDecoration.none),
-                ),
+            padding: EdgeInsets.only(top: 10.0),
+
+            //// Wrap the ListTile with Card Widget...
+            child: TransparentImageCard(
+              width: 300,
+              height: 300,
+              imageProvider: NetworkImage(
+                  'https://img.freepik.com/foto-gratis/flor-purpura-margarita-osteospermum_1373-16.jpg?size=626&ext=jpg&ga=GA1.1.672697106.1714089600&semt=ais'),
+              title: Text(
+                mem.title,
+                style: TextStyle(
+                    fontSize: 22.0,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.white,
+                    decoration: TextDecoration.none),
               ),
-            )
-            );
-          }
-    );
+              description: Text(
+                formatDescription(mem.description),
+                style: TextStyle(
+                    fontSize: 18.0,
+                    fontWeight: FontWeight.normal,
+                    color: Colors.white,
+                    decoration: TextDecoration.none),
+              ),
+            ),
+          ));
+        });
   }
 }
 
@@ -161,47 +157,45 @@ class GridViewMemory extends StatelessWidget {
   final AsyncSnapshot<List<Memory>> snapshot;
   @override
   Widget build(BuildContext context) {
-    return 
-    Padding(padding: EdgeInsets.all(16.0), child:
-    GridView.builder(
-      shrinkWrap: true,
-      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-        crossAxisCount:
-            columnsCount, 
-        crossAxisSpacing: 10.0,
-        mainAxisSpacing: 10.0,
-      ),
-      itemCount: snapshot.data!.length,
-      itemBuilder: (context, index) {
-        final mem = snapshot.data![index];
-        return TransparentImageCard(
-          width: 300,
-          height: 300,
-          imageProvider: NetworkImage(
-            'https://img.freepik.com/foto-gratis/flor-purpura-margarita-osteospermum_1373-16.jpg?size=626&ext=jpg&ga=GA1.1.672697106.1714089600&semt=ais',
+    return Padding(
+        padding: EdgeInsets.all(16.0),
+        child: GridView.builder(
+          shrinkWrap: true,
+          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+            crossAxisCount: columnsCount,
+            crossAxisSpacing: 10.0,
+            mainAxisSpacing: 10.0,
           ),
-          title: Text(
-            mem.title,
-            style: TextStyle(
-              fontSize: 22.0,
-              fontWeight: FontWeight.bold,
-              color: Colors.white,
-              decoration: TextDecoration.none,
-            ),
-          ),
-          description: Text(
-            formatDescription(mem.description),
-            style: TextStyle(
-              fontSize: 18.0,
-              fontWeight: FontWeight.normal,
-              color: Colors.white,
-              decoration: TextDecoration.none,
-            ),
-          ),
-        );
-      },
-    )
-    );
+          itemCount: snapshot.data!.length,
+          itemBuilder: (context, index) {
+            final mem = snapshot.data![index];
+            return TransparentImageCard(
+              width: 300,
+              height: 300,
+              imageProvider: NetworkImage(
+                'https://img.freepik.com/foto-gratis/flor-purpura-margarita-osteospermum_1373-16.jpg?size=626&ext=jpg&ga=GA1.1.672697106.1714089600&semt=ais',
+              ),
+              title: Text(
+                mem.title,
+                style: TextStyle(
+                  fontSize: 22.0,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.white,
+                  decoration: TextDecoration.none,
+                ),
+              ),
+              description: Text(
+                formatDescription(mem.description),
+                style: TextStyle(
+                  fontSize: 18.0,
+                  fontWeight: FontWeight.normal,
+                  color: Colors.white,
+                  decoration: TextDecoration.none,
+                ),
+              ),
+            );
+          },
+        ));
   }
 }
 
