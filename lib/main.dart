@@ -3,7 +3,9 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:image_card/image_card.dart';
-import 'package:phomem/memory.dart';
+import 'package:phomem/Models/Memory.dart';
+import 'package:phomem/components/formatImageCard.dart';
+import 'package:phomem/memoryFormPage.dart';
 import 'package:uuid/uuid.dart';
 import 'dart:developer';
 
@@ -21,23 +23,37 @@ class PhomemApp extends StatelessWidget {
         colorScheme:
             ColorScheme.fromSeed(seedColor: Color.fromARGB(255, 77, 199, 255)),
       ),
-      home: Inicio(),
+      home: MyHomePage(),
     );
   }
 }
 
-class Inicio extends StatefulWidget {
-  const Inicio({super.key});
-
+class MyHomePage extends StatefulWidget {
   @override
-  State<Inicio> createState() => _InicioState();
+  State<MyHomePage> createState() => _MyHomePageState();
 }
 
-class _InicioState extends State<Inicio> {
+class _MyHomePageState extends State<MyHomePage> {
+  var selectedIndex = 0;
+
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    return Scaffold(
+    Widget page;
+    switch (selectedIndex) {
+      case 0:
+        page = MemoriesListView();
+        break;
+      case 1:
+        page = Placeholder();
+        break;
+      case 2:
+        page = MemoryFormPage();
+        break;
+      default:
+        throw UnimplementedError('No widget for $selectedIndex');
+    }
+    return LayoutBuilder(builder: (context, constraints) {
+      return Scaffold(
         appBar: AppBar(
           title: Text("PhotoMemories",
               style: TextStyle(
@@ -45,12 +61,46 @@ class _InicioState extends State<Inicio> {
                   fontWeight: FontWeight.bold,
                   color: Colors.white,
                   decoration: TextDecoration.none)),
-          backgroundColor: theme.colorScheme.primary,
+          backgroundColor: Colors.blue,
         ),
-        body: const MaterialApp(
-          title: 'Navigation Basics',
-          home: MemoriesListView(),
-        ));
+        body: Row(
+          children: [
+            if (constraints.maxWidth >= 300)
+              SafeArea(
+                child: NavigationRail(
+                  extended: constraints.maxWidth >= 600,
+                  destinations: [
+                    NavigationRailDestination(
+                      icon: Icon(Icons.home),
+                      label: Text('Home'),
+                    ),
+                    NavigationRailDestination(
+                      icon: Icon(Icons.people),
+                      label: Text('People'),
+                    ),
+                    NavigationRailDestination(
+                      icon: Icon(Icons.add),
+                      label: Text('Add Memory'),
+                    ),
+                  ],
+                  selectedIndex: selectedIndex,
+                  onDestinationSelected: (value) {
+                    setState(() {
+                      selectedIndex = value;
+                    });
+                  },
+                ),
+              ),
+            Expanded(
+              child: Container(
+                color: Theme.of(context).colorScheme.primaryContainer,
+                child: page,
+              ),
+            ),
+          ],
+        ),
+      );
+    });
   }
 }
 
@@ -69,8 +119,7 @@ class _MemoriesListViewState extends State<MemoriesListView> {
     final screenWidth = MediaQuery.of(context).size.width;
     final columnsCount = (screenWidth / memoryWidth)
         .floor(); // Ancho de cada elemento (ejemplo: 200)
-    return SafeArea(
-        child: SingleChildScrollView(
+    return SingleChildScrollView(
       child: FutureBuilder(
         future: fetchMemory(),
         builder: (context, AsyncSnapshot<List<Memory>> snapshot) {
@@ -81,6 +130,7 @@ class _MemoriesListViewState extends State<MemoriesListView> {
           } else if (snapshot.hasError) {
             return Center(
               child: Text("Error: ${snapshot.error}"),
+              
             );
           } else if (snapshot.hasData) {
             if (columnsCount > 1) {
@@ -96,7 +146,7 @@ class _MemoriesListViewState extends State<MemoriesListView> {
           }
         },
       ),
-    ));
+    );
   }
 }
 
@@ -119,32 +169,13 @@ class ListViewMemory extends StatelessWidget {
             padding: EdgeInsets.only(top: 10.0),
 
             //// Wrap the ListTile with Card Widget...
-            child: TransparentImageCard(
-              width: 300,
-              height: 300,
-              imageProvider: NetworkImage(
-                  'https://img.freepik.com/foto-gratis/flor-purpura-margarita-osteospermum_1373-16.jpg?size=626&ext=jpg&ga=GA1.1.672697106.1714089600&semt=ais'),
-              title: Text(
-                mem.title,
-                style: TextStyle(
-                    fontSize: 22.0,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.white,
-                    decoration: TextDecoration.none),
-              ),
-              description: Text(
-                formatDescription(mem.description),
-                style: TextStyle(
-                    fontSize: 18.0,
-                    fontWeight: FontWeight.normal,
-                    color: Colors.white,
-                    decoration: TextDecoration.none),
-              ),
-            ),
+            child: FormatImageCard(mem: mem),
           ));
         });
   }
 }
+
+
 
 class GridViewMemory extends StatelessWidget {
   const GridViewMemory({
@@ -169,31 +200,7 @@ class GridViewMemory extends StatelessWidget {
           itemCount: snapshot.data!.length,
           itemBuilder: (context, index) {
             final mem = snapshot.data![index];
-            return TransparentImageCard(
-              width: 300,
-              height: 300,
-              imageProvider: NetworkImage(
-                'https://img.freepik.com/foto-gratis/flor-purpura-margarita-osteospermum_1373-16.jpg?size=626&ext=jpg&ga=GA1.1.672697106.1714089600&semt=ais',
-              ),
-              title: Text(
-                mem.title,
-                style: TextStyle(
-                  fontSize: 22.0,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.white,
-                  decoration: TextDecoration.none,
-                ),
-              ),
-              description: Text(
-                formatDescription(mem.description),
-                style: TextStyle(
-                  fontSize: 18.0,
-                  fontWeight: FontWeight.normal,
-                  color: Colors.white,
-                  decoration: TextDecoration.none,
-                ),
-              ),
-            );
+            return FormatImageCard(mem: mem);
           },
         ));
   }
@@ -201,26 +208,13 @@ class GridViewMemory extends StatelessWidget {
 
 Future<List<Memory>> fetchMemory() async {
   final response = await http.get(Uri.parse('http://localhost:8000/'));
-
   if (response.statusCode == 200) {
     String responseData = utf8.decode(response.bodyBytes);
-    for (Memory m in (json.decode(responseData) as List)
-        .map((i) => Memory.fromJson(i))
-        .toList()) {}
     return (json.decode(responseData) as List)
         .map((i) => Memory.fromJson(i))
         .toList();
   } else {
-    // If the server did not return a 200 OK response,
-    // then throw an exception.
     throw Exception('Failed to load album');
   }
 }
 
-String formatDescription(String description) {
-  const maxLength = 75;
-  if (description.length > maxLength) {
-    return ("${description.substring(0, maxLength - 3)}...");
-  }
-  return description;
-}
