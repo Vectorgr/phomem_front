@@ -12,9 +12,8 @@ class DialogEditMemory extends StatelessWidget {
     super.key,
     required this.memory,
   });
-  
+
   @override
-  
   Widget build(BuildContext context) {
     Memory newMemory = memory;
     return Scaffold(
@@ -25,31 +24,60 @@ class DialogEditMemory extends StatelessWidget {
           icon: Icon(Icons.close),
           onPressed: () => Navigator.of(context).pop(),
         ),
+        actions: [
+          ElevatedButton(
+            style: ElevatedButton.styleFrom(backgroundColor: Colors.red, foregroundColor: Colors.white),
+
+            onPressed: () =>
+                { deleteMemory(memory.id)},
+            child: Row(
+              children: [
+                Text("Delete memory"),
+                Icon(
+                  Icons.delete,
+                  size: 30.0,
+                )
+              ],
+            ),
+          ),
+          Padding(padding: EdgeInsets.only(right: 20))
+        ],
       ),
       body: SafeArea(
           child: FormBuilder(
         child: Column(children: [
           Padding(padding: EdgeInsets.only(top: 20)),
           Row(children: [
-            Expanded(flex: 2, child: Container(),),
+            Expanded(
+              flex: 2,
+              child: Container(),
+            ),
             Expanded(
                 flex: 8,
                 child: Padding(
                     padding: EdgeInsets.all(10),
-                    child: EditMemoryColumn(mem: memory, onChangedMem: (Memory value) => newMemory))),
-             Expanded(flex: 2, child: Container(),),
+                    child: EditMemoryColumn(
+                        mem: memory,
+                        onChangedMem: (Memory value) => newMemory))),
+            Expanded(
+              flex: 2,
+              child: Container(),
+            ),
             Expanded(
                 //ADDIMAGE
                 flex: 8,
                 child: Padding(
                     padding: EdgeInsets.all(10),
-                    child:  AddImageColumn(memory: memory, onChangedMem: (Memory value) => newMemory,))),
-            Expanded(flex: 2, child: Container(),),
-
+                    child: AddImageColumn(
+                      memory: memory,
+                      onChangedMem: (Memory value) => newMemory,
+                    ))),
+            Expanded(
+              flex: 2,
+              child: Container(),
+            ),
           ]),
-         Padding(padding: EdgeInsets.only(top: 20)),
-
-          
+          Padding(padding: EdgeInsets.only(top: 20)),
           Center(
               child: ElevatedButton(
             style: ButtonStyle(
@@ -76,4 +104,9 @@ class DialogEditMemory extends StatelessWidget {
       )),
     );
   }
+}
+
+Future<void> deleteMemory(memoryID) async {
+  print("TEST");
+  await Api.deleteMemory(memoryID);
 }

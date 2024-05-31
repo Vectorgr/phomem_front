@@ -27,6 +27,7 @@ class _AddImageColumnState extends State<AddImageColumn> {
             decoration: BoxDecoration(
               image: DecorationImage(
                 image: NetworkImage(
+                   //TODO cambiar imagen
                     "https://t4.ftcdn.net/jpg/04/81/13/43/360_F_481134373_0W4kg2yKeBRHNEklk4F9UXtGHdub3tYk.jpg"),
                 fit: BoxFit.fitHeight,
               ),

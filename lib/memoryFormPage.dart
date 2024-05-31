@@ -118,7 +118,7 @@ class NewFormBuilder extends StatelessWidget {
                   onPressed: () async {
                     String memoryID = await Api.postMemory(title, description, date);
                     Memory mem = await Api.getMemory(memoryID);
-                   _showFullScreenDialog(context, mem);
+                   _editMemoryDialog(context, mem);
                     
                   },
                 )
@@ -129,7 +129,7 @@ class NewFormBuilder extends StatelessWidget {
         ));
   }
 }
-void _showFullScreenDialog(BuildContext context, Memory memory) {
+void _editMemoryDialog(BuildContext context, Memory memory) {
   Navigator.of(context).push(MaterialPageRoute<void>(
     fullscreenDialog: true,
     builder: (BuildContext context) {

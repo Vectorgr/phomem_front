@@ -21,6 +21,10 @@ dependencies:
   image_picker: ^1.1.1
   carousel_slider: ^4.2.1
   json_annotation: ^4.9.0
+  dio: ^5.4.3+1
+  shared_preferences: ^2.2.3
+  url_launcher: ^6.2.6
+  i18n_extension: ^11.0.9
 
 dev_dependencies:
   flutter_test:
@@ -30,3 +34,5 @@ dev_dependencies:
 
 flutter:
   uses-material-design: true
+  assets:
+    - icons/LogoPhoMem.png

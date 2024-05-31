@@ -4,8 +4,14 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:image_card/image_card.dart';
 import 'package:phomem/Models/Memory.dart';
+import 'package:phomem/api.dart';
 import 'package:phomem/components/formatImageCard.dart';
+import 'package:phomem/components/viewLocation/locationViewPage.dart';
+import 'package:phomem/components/viewPerson/peopleViewPage.dart';
+import 'package:phomem/components/viewsettings/settingsViewPage.dart';
+import 'package:phomem/login/loginPage.dart';
 import 'package:phomem/memoryFormPage.dart';
+import 'package:phomem/store/sharedPreferences.dart';
 import 'package:uuid/uuid.dart';
 import 'dart:developer';
 
@@ -14,8 +20,13 @@ void main() {
 }
 
 class PhomemApp extends StatelessWidget {
+  static final GlobalKey<NavigatorState> navigatorKey =
+      GlobalKey<NavigatorState>();
+  final SharedPrefsHelper _prefsHelper = SharedPrefsHelper();
+
   @override
   Widget build(BuildContext context) {
+    Api.configureDio(); // Configurar Dio al inicio de la app
     return MaterialApp(
       title: "PhomemApp",
       theme: ThemeData(
@@ -24,6 +35,7 @@ class PhomemApp extends StatelessWidget {
             ColorScheme.fromSeed(seedColor: Color.fromARGB(255, 77, 199, 255)),
       ),
       home: MyHomePage(),
+      navigatorKey: navigatorKey,
     );
   }
 }
@@ -44,10 +56,19 @@ class _MyHomePageState extends State<MyHomePage> {
         page = MemoriesListView();
         break;
       case 1:
-        page = Placeholder();
+        page = PeopleViewPage();
         break;
       case 2:
+        page = LocationViewPage();
+        break;
+      case 3:
+        page = Placeholder();
+        break;
+      case 4:
         page = MemoryFormPage();
+        break;
+      case 5:
+        page = SettingsViewPage();
         break;
       default:
         throw UnimplementedError('No widget for $selectedIndex');
@@ -79,8 +100,20 @@ class _MyHomePageState extends State<MyHomePage> {
                       label: Text('People'),
                     ),
                     NavigationRailDestination(
+                      icon: Icon(Icons.location_on),
+                      label: Text('Locations'),
+                    ),
+                    NavigationRailDestination(
+                      icon: Icon(Icons.image),
+                      label: Text('Images'),
+                    ),
+                    NavigationRailDestination(
                       icon: Icon(Icons.add),
-                      label: Text('Add Memory'),
+                      label: Text('Add memory'),
+                    ),
+                    NavigationRailDestination(
+                      icon: Icon(Icons.settings),
+                      label: Text('Settings'),
                     ),
                   ],
                   selectedIndex: selectedIndex,
@@ -117,11 +150,10 @@ class _MemoriesListViewState extends State<MemoriesListView> {
     //Adapt columns with Screen size
     const memoryWidth = 280;
     final screenWidth = MediaQuery.of(context).size.width;
-    final columnsCount = (screenWidth / memoryWidth)
-        .floor(); // Ancho de cada elemento (ejemplo: 200)
+    final columnsCount = (screenWidth / memoryWidth).floor();
     return SingleChildScrollView(
       child: FutureBuilder(
-        future: fetchMemory(),
+        future: Api.getMemories(),
         builder: (context, AsyncSnapshot<List<Memory>> snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return Center(
@@ -130,7 +162,6 @@ class _MemoriesListViewState extends State<MemoriesListView> {
           } else if (snapshot.hasError) {
             return Center(
               child: Text("Error: ${snapshot.error}"),
-              
             );
           } else if (snapshot.hasData) {
             if (columnsCount > 1) {
@@ -159,6 +190,7 @@ class ListViewMemory extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    Api.configureDio();
     return ListView.builder(
         shrinkWrap: true,
         itemCount: snapshot.data!.length,
@@ -167,15 +199,11 @@ class ListViewMemory extends StatelessWidget {
           return Center(
               child: Padding(
             padding: EdgeInsets.only(top: 10.0),
-
-            //// Wrap the ListTile with Card Widget...
             child: FormatImageCard(mem: mem),
           ));
         });
   }
 }
-
-
 
 class GridViewMemory extends StatelessWidget {
   const GridViewMemory({
@@ -205,16 +233,3 @@ class GridViewMemory extends StatelessWidget {
         ));
   }
 }
-
-Future<List<Memory>> fetchMemory() async {
-  final response = await http.get(Uri.parse('http://localhost:8000/'));
-  if (response.statusCode == 200) {
-    String responseData = utf8.decode(response.bodyBytes);
-    return (json.decode(responseData) as List)
-        .map((i) => Memory.fromJson(i))
-        .toList();
-  } else {
-    throw Exception('Failed to load album');
-  }
-}
-

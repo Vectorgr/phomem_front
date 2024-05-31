@@ -30,11 +30,11 @@ class Memory {
     return memoryList;
   }
   void addImage(String id){
-    imageList ??= List.empty(growable: true); //If imagelist is null
+    imageList ??= List.empty(growable: true); //If imagelist == null
     imageList!.add(id);
   }
   factory Memory.fromJson(Map<String, dynamic> json) {
-    String? dateString = json['date']; // Suponiendo que 'date' es la clave en tu objeto JSON que contiene la fecha como una cadena de texto
+    String? dateString = json['date'];
     DateTime datet = DateFormat('dd/MM/yyyy').parse(json['date']);
     List<String>? imageList;
 
