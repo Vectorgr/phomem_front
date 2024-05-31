@@ -1,19 +1,12 @@
-import 'dart:convert';
 
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
-import 'package:image_card/image_card.dart';
 import 'package:phomem/Models/Memory.dart';
 import 'package:phomem/api.dart';
 import 'package:phomem/components/formatImageCard.dart';
 import 'package:phomem/components/viewLocation/locationViewPage.dart';
 import 'package:phomem/components/viewPerson/peopleViewPage.dart';
 import 'package:phomem/components/viewsettings/settingsViewPage.dart';
-import 'package:phomem/login/loginPage.dart';
-import 'package:phomem/memoryFormPage.dart';
-import 'package:phomem/store/sharedPreferences.dart';
-import 'package:uuid/uuid.dart';
-import 'dart:developer';
+import 'package:phomem/components/viewMemoryDialog/memoryFormPage.dart';
 
 void main() {
   runApp(PhomemApp());
@@ -22,7 +15,6 @@ void main() {
 class PhomemApp extends StatelessWidget {
   static final GlobalKey<NavigatorState> navigatorKey =
       GlobalKey<NavigatorState>();
-  final SharedPrefsHelper _prefsHelper = SharedPrefsHelper();
 
   @override
   Widget build(BuildContext context) {

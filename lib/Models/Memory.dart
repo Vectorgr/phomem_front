@@ -1,5 +1,4 @@
 import 'package:json_annotation/json_annotation.dart';
-import 'package:phomem/Models/Person.dart';
 import 'package:intl/intl.dart';
 
 
@@ -34,7 +33,6 @@ class Memory {
     imageList!.add(id);
   }
   factory Memory.fromJson(Map<String, dynamic> json) {
-    String? dateString = json['date'];
     DateTime datet = DateFormat('dd/MM/yyyy').parse(json['date']);
     List<String>? imageList;
 

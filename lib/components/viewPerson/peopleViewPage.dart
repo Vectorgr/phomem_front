@@ -1,8 +1,5 @@
-import 'dart:math';
-import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:phomem/Models/Memory.dart';
 import 'package:phomem/Models/Person.dart';
 import 'package:phomem/api.dart';
 import 'package:phomem/components/viewPerson/addPersonDialog.dart';

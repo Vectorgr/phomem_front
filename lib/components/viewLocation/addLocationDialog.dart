@@ -4,11 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:phomem/Models/Memory.dart';
-import 'package:phomem/Models/Person.dart';
 import 'package:phomem/api.dart';
-import 'package:phomem/components/editDialog/addImageColumn.dart';
-import 'package:intl/intl.dart';
 
 class DialogAddLocation extends StatelessWidget {
   const DialogAddLocation({super.key});
@@ -207,8 +203,7 @@ class _ProfilePicState extends State<ProfilePic> {
         onTap: _selectImage,
         child: LayoutBuilder(
           builder: (context, constraints) {
-            double size =
-                constraints.maxWidth * 0.1; // Adjust the factor as needed
+
             return GestureDetector(
                 onTap: _selectImage,
                 child: Container(

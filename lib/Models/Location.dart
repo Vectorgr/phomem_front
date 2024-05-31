@@ -1,10 +1,6 @@
-import 'dart:typed_data';
 import 'dart:ui';
 
-import 'package:flutter/foundation.dart';
 import 'package:json_annotation/json_annotation.dart';
-import 'package:uuid/uuid.dart';
-import 'package:intl/intl.dart';
 
 @JsonSerializable()
 class Location {

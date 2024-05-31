@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:phomem/Models/Location.dart';
 import 'package:phomem/api.dart';
 import 'package:phomem/components/viewLocation/addLocationDialog.dart';
-import 'package:phomem/main.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class LocationViewPage extends StatefulWidget {

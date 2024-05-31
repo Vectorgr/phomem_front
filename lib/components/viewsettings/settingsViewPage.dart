@@ -13,7 +13,6 @@ class SettingsViewPage extends StatefulWidget {
 class _SettingsViewPageState extends State<SettingsViewPage> {
   @override
   Widget build(BuildContext context) {
-    List<DropdownMenuItem<dynamic>> languageList = [];
     void reloadPage() {
       setState(() {});
     }
